@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Imports\EventsImport;
 use Excel;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -20,11 +21,13 @@ class EventController extends Controller
     {
         $event = Event::orderBy('id', 'desc')->paginate(10);
 
-        $event = Event::find(1);
 
-        $number = $event->pivot->id;
 
-        dd($number);
+
+        foreach ($event as $item) {
+            $item['countGuest'] = $item->guests->count();
+        }
+
 
         return view('eventViews.listEvent', ['listEvents' => $event]);
     }

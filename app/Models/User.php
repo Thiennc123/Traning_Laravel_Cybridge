@@ -43,34 +43,26 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public static function getUsers()
+    public function setPasswordAttribute($value)
     {
-        $record = User::select('id', 'name', 'email')->get()->toArray();
-        return $record;
+
+        $this->attributes['password'] = bcrypt($value);
     }
 
-    public function roles()
-    {
-        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
-    }
 
-    public function events()
+
+
+
+
+
+
+
+
+
+
+
+    /*public function events()
     {
         return $this->hasMany(Event::class);
-    }
-
-    public function checkPermission($permission)
-    {
-
-
-        $roles = Auth()->user()->roles;
-
-        foreach ($roles as $role) {
-            $permissions = $role->permissions;
-
-            if ($permissions->contains('name', $permission)) {
-                return true;
-            }
-        }
-    }
+    }*/
 }

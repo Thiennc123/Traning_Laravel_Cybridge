@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -15,7 +15,7 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function viewAny(User $user)
+    public function viewAny(Admin $user)
     {
         //
     }
@@ -27,7 +27,7 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user)
+    public function view(Admin $user)
     {
 
         return $user->checkPermission('show_listUser');
@@ -39,9 +39,11 @@ class UserPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(Admin $user)
     {
-        return $user->checkPermission('edit_user');
+
+
+        return $user->checkPermission('edit_User');
     }
 
     /**
@@ -51,7 +53,7 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, User $model)
+    public function update(Admin $user, Admin $model)
     {
         //
     }
@@ -63,9 +65,9 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, User $model)
+    public function delete(Admin $user)
     {
-        return $user->checkPermission('remove_user');
+        return $user->checkPermission('remove_User');
     }
 
     /**
@@ -75,9 +77,9 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user)
+    public function restore(Admin $user)
     {
-        return $user->checkPermission('add_user');
+        return $user->checkPermission('add_User');
     }
 
     /**
@@ -87,7 +89,7 @@ class UserPolicy
      * @param  \App\Models\User  $model
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, User $model)
+    public function forceDelete(Admin $user, Admin $model)
     {
     }
 }

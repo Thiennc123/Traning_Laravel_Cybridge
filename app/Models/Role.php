@@ -15,9 +15,9 @@ class Role extends Model
 
     ];
 
-    public function users()
+    public function admins()
     {
-        return $this->belongsToMany(User::class, 'role_user', 'role_id', 'user_id'); // role_idla khoa ngoai trong bang pivot cua model tao ra lien ket
+        return $this->belongsToMany(Admin::class, 'admin_role', 'role_id', 'admin_id'); // role_idla khoa ngoai trong bang pivot cua model tao ra lien ket
     }
 
     public function permissions()

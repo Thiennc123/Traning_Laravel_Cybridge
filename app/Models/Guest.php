@@ -13,11 +13,12 @@ class Guest extends Model
         'name',
         'email',
         'id',
+        'updated_at',
     ];
 
 
     public function events()
     {
-        return $this->belongsToMany(Event::class, 'event_guest', 'guest_id', 'event_id');
+        return $this->belongsToMany(Event::class, 'event_guest', 'guest_id', 'event_id')->withPivot('id');;
     }
 }

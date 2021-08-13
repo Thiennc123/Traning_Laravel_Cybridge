@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Guest;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 use Auth;
 
 class GuestController extends Controller
@@ -56,15 +57,27 @@ class GuestController extends Controller
      */
     public function edit($id)
     {
+
+        $listGuests = Guest::all();
         $guest = new Guest;
 
         $guest->name = Auth::user()->name;
-        $guest->email = Auth::user()->email;
 
-        $guest->save();
-        $guest->events()->attach($id);
 
-        return redirect()->route('events.index');
+        foreach ($listGuests as $guests) {
+            if ($guests->email == Auth::user()->email) {
+                Alert::warning('Warning Title', 'You Registed');
+
+
+                return redirect()->back();
+            } else {
+
+                $guest->email = Auth::user()->email;
+                $guest->save();
+                $guest->events()->attach($id);
+                return redirect()->route('events.index');
+            }
+        }
     }
 
     /**

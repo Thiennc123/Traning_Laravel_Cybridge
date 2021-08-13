@@ -40,7 +40,11 @@
                 </select>
             </div>
 
-
+            <div>
+                @foreach ($errors->all() as $error)
+                    <li style="color: red">{{ $error }}</li>
+                @endforeach
+            </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>

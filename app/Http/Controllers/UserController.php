@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\User;
-use App\Models\Role;
-use Illuminate\Support\Facades\Hash;
+
 use Illuminate\Support\Facades\Gate;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Http\Requests\UserRequest;
 use App\Exports\UsersExport;
+use App\Repositories\UserRepositories\UserRepositoryInterface;
 use Excel;
 
 
@@ -20,13 +19,19 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public $userRepo;
+
+    public function __construct(UserRepositoryInterface $userRepo)
+    {
+        $this->userRepo = $userRepo;
+    }
     public function index()
     {
 
         if (Gate::allows('show_listUser')) {
-            $user = User::orderBy('id', 'desc')->paginate(10);
 
-            return view('userViews.listUser', ['listUsers' => $user]);
+            return view('admin.userViews.listUser', ['users' => $this->userRepo->getAll()]);
         } else {
             Alert::warning('Warning Title', 'Ban khong co quyen truy cap vao day');
 
@@ -43,10 +48,9 @@ class UserController extends Controller
     public function create()
     {
 
-
         if (Gate::allows('add_User')) {
-            $role = Role::all();
-            return view('userViews.addUser', ['listRoles' => $role]);
+
+            return view('admin.userViews.addUser');
         } else {
             Alert::warning('Warning Title', 'Ban khong co quyen truy cap vao day');
 
@@ -54,24 +58,18 @@ class UserController extends Controller
             return redirect()->back();
         }
     }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        $user = new User;
+        $input = $request->all();
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->save();
-        $user->roles()->attach($request->role_id);
-
-        return redirect()->route('users.index');
+        $this->userRepo->store($input);
+        return redirect()->route('admin.users.index');
     }
     /**
      * Display the specified resource.
@@ -79,9 +77,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        return view('userViews.detailUser');
     }
 
     /**
@@ -93,13 +91,9 @@ class UserController extends Controller
     public function edit($id)
     {
 
+        if (Gate::allows('edit_User')) {
 
-
-        if (Gate::allows('add_User')) {
-            $role = Role::all();
-            $user = User::find($id);
-            $roleUser = $user->roles;
-            return view('userViews.editUser', ['roleUsers' => $roleUser, 'user' => $user, 'listRoles' => $role]);
+            return view('admin.userViews.editUser')->with('user', $this->userRepo->edit($id));
         } else {
             Alert::warning('Warning Title', 'Ban khong co quyen truy cap vao day');
 
@@ -115,18 +109,13 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        User::find($id)->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
 
-        $user = User::find($id);
-        $user->roles()->sync($request->role_id);
 
-        return redirect()->route('users.index');
+        $input = $request->all();
+        $this->userRepo->update($input, $id);
+        return redirect()->back();
     }
 
     /**
@@ -138,10 +127,9 @@ class UserController extends Controller
     public function destroy($id)
     {
 
-
-        if (Gate::allows('add_User')) {
-            User::find($id)->delete();
-            return redirect()->route('users.index');
+        if (Gate::allows('remove_User')) {
+            $this->userRepo->destroy($id);
+            return redirect()->route('admin.users.index');
         } else {
             Alert::warning('Warning Title', 'Ban khong co quyen truy cap vao day');
 

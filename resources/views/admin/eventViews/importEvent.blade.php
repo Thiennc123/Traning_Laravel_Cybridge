@@ -1,4 +1,4 @@
-@extends('dashboard')
+@extends('admin.home')
 
 @section('main_content')
     <div class="header">
@@ -11,7 +11,7 @@
     </div>
     <div class="info row " style="display: flex;justify-content: center;">
 
-        <form class="w-50" action="{{ route('events.ImportEvent') }}" method="post" enctype="multipart/form-data">
+        <form class="w-50" action="{{ route('admin.events.ImportEvent') }}" method="post" enctype="multipart/form-data">
             @csrf
 
 

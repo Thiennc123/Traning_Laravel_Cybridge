@@ -1,4 +1,4 @@
-@extends('dashboard')
+@extends('admin.home')
 
 @section('main_content')
     <div class="header">
@@ -11,7 +11,7 @@
     </div>
     <div class="info row " style="display: flex;justify-content: center;">
 
-        <form class="w-50" action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data">
+        <form class="w-50" action="{{ route('admin.events.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="form-group">
                 <label for="exampleInputEmail1">Name</label>

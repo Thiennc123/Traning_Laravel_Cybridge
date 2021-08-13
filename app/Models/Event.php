@@ -16,12 +16,14 @@ class Event extends Model
         'status',
         'image',
         'user_id',
+        'updated_at',
+        'date_end'
     ];
 
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Admin::class);
     }
 
     public function guests()

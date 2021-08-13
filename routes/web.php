@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\Admin\AuthController;
 
 
 
@@ -54,14 +56,34 @@ Route::get('/profile', function () {
 
 //user controller
 
-Route::resource('users', UserController::class)->middleware('auth');
 
-Route::get('getfileUser', [UserController::class, 'exportFile'])->middleware('auth')->name('users.download');
 
-Route::resource('events', EventController::class)->middleware('auth');
+
+Route::resource('events', App\Http\Controllers\EventController::class)->middleware('auth');
+//Route::resource('events', EventController::class)->middleware('auth');
 
 Route::get('showImportEvent', [EventController::class, 'showimportEvent'])->middleware('auth')->name('events.showFormImport');
 
-Route::post('importEvent', [EventController::class, 'importEvent'])->middleware('auth')->name('events.ImportEvent');
+
 
 Route::resource('guests', GuestController::class)->middleware('auth');
+Route::get('detailUser', [UserController::class, 'show'])->middleware('auth')->name('users.details');
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['guest:admin'])->group(function () {
+        Route::view('/login', 'admin.login')->name('login');
+        Route::post('/check', [AuthController::class, 'check'])->name('check');
+    });
+
+    Route::middleware(['auth:admin'])->group(function () {
+        Route::view('/home', 'admin.home')->name('home');
+        Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::resource('users', UserController::class);
+        Route::resource('admins', AdminController::class);
+        Route::get('getfileUser', [UserController::class, 'exportFile'])->name('users.download');
+        Route::resource('events', EventController::class);
+        Route::post('importEvent', [EventController::class, 'importEvent'])->name('events.ImportEvent');
+        Route::get('showImportEvent', [EventController::class, 'showimportEvent'])->name('events.showFormImport');
+    });
+});

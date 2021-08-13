@@ -19,9 +19,8 @@ class CreateEventsTable extends Migration
             $table->string('content');
             $table->string('status');
             $table->string('image');
-            $table->unsignedBigInteger('user_id');
+
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
