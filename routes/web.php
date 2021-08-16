@@ -68,7 +68,8 @@ Route::get('showImportEvent', [EventController::class, 'showimportEvent'])->midd
 
 Route::resource('guests', GuestController::class)->middleware('auth');
 Route::get('detailUser', [UserController::class, 'show'])->middleware('auth')->name('users.details');
-
+Route::post('confirmEvent', [EventController::class, 'showConfirmtEvent'])->name('events.confirmEvent');
+Route::get('confirmEvent1', [EventController::class, 'showForm'])->name('events.confirmEvent1');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(['guest:admin'])->group(function () {

@@ -9,6 +9,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Repositories\EventRepositories\EventRepositoryInterface;
 use App\Imports\EventsImport;
 use App\Models\Event;
+use Illuminate\Support\Facades\Storage;
 use Excel;
 
 class EventController extends Controller
@@ -67,7 +68,6 @@ class EventController extends Controller
 
         $this->eventRepo->storeEvent($input);
 
-
         return redirect()->route('admin.events.index');
     }
 
@@ -77,8 +77,29 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showConfirmtEvent(Request $request)
     {
+        /*$image = $request->file('file');
+        $new_name = rand() . '.' . $image->getClientOriginalExtension();
+       
+        Storage::disk('public')->put($new_name, file_get_contents($image));*/
+        $image_parts = explode(";base64,", $request->filetmp);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        // $file = $folderPath . uniqid() . '.png';
+        $filename = time() . '.' . $image_type;
+        Storage::disk('public')->put($filename, $image_base64);
+        return response()->json([
+            'name' => $request->name,
+            'content' => $request->content,
+            'image' => $filename,
+        ]);
+    }
+
+    public function showForm()
+    {
+        return view('admin.eventViews.confirmEvent');
     }
 
     /**

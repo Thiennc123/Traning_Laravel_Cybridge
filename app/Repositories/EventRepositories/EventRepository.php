@@ -20,7 +20,7 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
     {
 
         $event = new $this->model;
-        if ($request['file']) {
+        /* if ($request['file']) {
 
             $file = $request['file'];
 
@@ -34,13 +34,14 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
             Storage::disk('public')->put($filename, file_get_contents($file));
             $url = Storage::url($filename);
             $event->image = $url;
-        }
+        }*/
+
+        Storage::move('public/tmp/' . $_COOKIE['image'], 'public/images/' . $_COOKIE['image']);
 
 
-
-        $event->name = $request['name'];
-        $event->content = $request['content'];
-
+        $event->name = $_COOKIE['name'];
+        $event->content = $_COOKIE['content'];
+        $event->image = '/storage/images/' . $_COOKIE['image'];
         $event->status = "public";
         $event->admin_id = Auth()->guard('admin')->id();
         $event->save();
