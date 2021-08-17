@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Admin;
+use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -44,5 +45,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('add_Event', 'App\Policies\EventPolicy@restore');
         Gate::define('edit_Event', 'App\Policies\EventPolicy@create');
         Gate::define('remove_Event', 'App\Policies\EventPolicy@delete');
+
+
+        Passport::routes();
     }
 }
