@@ -178,12 +178,19 @@
     <div class="wrapper">
         <div class="sidebar">
             <h2>Sidebar</h2>
-            <ul>
-                <li><a href="{{ route('admin.admins.index') }}"><i class="fas fa-home"></i>List Admin</a></li>
-                <li><a href="{{ route('admin.users.index') }}"><i class="fas fa-home"></i>List User</a></li>
-                <li><a href="{{ route('admin.events.index') }}"><i class="fas fa-user"></i>Event</a></li>
+            @php
+                $infos = [[route('admin.admins.index'), 'fas fa-home', 'List Admin'], [route('admin.users.index'), 'fas fa-home', 'List User'], [route('admin.events.index'), 'fas fa-user', 'Event']];
+            @endphp
 
-                <li><a href="{{ route('admin.logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+            <ul>
+
+                @foreach ($infos as $item)
+                    <x-left-menu-item href="{{ $item[0] }}" class="{{ $item[1] }}" name="{{ $item[2] }}">
+                    </x-left-menu-item>
+                @endforeach
+
+
+
 
             </ul>
             <div class="social_media">
