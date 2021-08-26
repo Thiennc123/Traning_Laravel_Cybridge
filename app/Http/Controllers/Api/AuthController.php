@@ -17,7 +17,9 @@ class AuthController extends Controller
     public function index()
     {
         $user = User::all();
-        return response()->json($user);
+        return response()->json([
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -67,35 +69,57 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth()->user();
-            $token = $user->createToken($user->name);
+        $data = $request->only('email', 'password');
 
+        if (Auth::guard('admin')->attempt($data)) {
+            $user   = Auth::guard('admin')->user();
+            
+            $token  = $user->createToken($user->name);
+        
             return response()->json([
-                'user' => $user,
-                'token' => $token,
-                'message' => 'dang nhap thanh cong',
+                'user'      => $user,
+                'token'     => $token,
+                'message'   => 'dang nhap thanh cong',
+                'status'    => true,
 
             ], 200);
         } else {
-            return response()->json([
-
-                'message' => 'dang nhap khong thanh cong',
-
+             return response()->json([
+                'status'    => false,    
+                'message'   => 'dang nhap khong thanh cong',
             ], 201);
         }
+        // $credentials = $request->validate([
+        //     'email'     => ['required', 'email'],
+        //     'password'  => ['required'],
+        // ]);
+
+
+
+        // if (Auth::attempt($credentials)) {
+        //     $user   = Auth()->user();
+        //     $token  = $user->createToken($user->name);
+
+        //     return response()->json([
+        //         'user'      => $user,
+        //         'token'     => $token,
+        //         'message'   => 'dang nhap thanh cong',
+        //         'status'    => true,
+
+        //     ], 200);
+        // } else {
+        //     return response()->json([
+        //         'status'    => false,    
+        //         'message'   => 'dang nhap khong thanh cong',
+        //     ], 201);
+        // }
     }
 
     public function logout()
     {
-
-        $accessToken = auth()->user()->token();
-        $token = Auth::user()->tokens->find($accessToken);
+        $accessToken    = auth()->user()->token();
+        $token          = Auth::user()->tokens->find($accessToken);
         $token->revoke();
         return response(['message' => 'You have been successfully logged out.'], 200);
     }

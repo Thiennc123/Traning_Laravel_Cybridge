@@ -6,6 +6,8 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use App\Models\Admin;
 use Laravel\Passport\Passport;
+use App\Policies\EventPolicy;
+use App\Policies\AdminPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -35,7 +37,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('edit_User', 'App\Policies\UserPolicy@create');
         Gate::define('remove_User', 'App\Policies\UserPolicy@delete');
 
-
         Gate::define('show_listAdmin', 'App\Policies\AdminPolicy@view');
         Gate::define('add_Admin', 'App\Policies\AdminPolicy@restore');
         Gate::define('edit_Admin', 'App\Policies\AdminPolicy@create');
@@ -48,5 +49,10 @@ class AuthServiceProvider extends ServiceProvider
 
 
         Passport::routes();
+
+        Passport::tokensCan([
+            'user' => 'User Type',
+            'admin' => 'Admin User Type',
+        ]);
     }
 }

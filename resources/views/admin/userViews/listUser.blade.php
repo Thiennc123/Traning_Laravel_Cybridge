@@ -8,7 +8,6 @@
 
                 <a href="{{ route('admin.users.download') }}" class="btn btn-xs btn-info pull-right">Download User</a>
             </div>
-
         </nav>
     </div>
     <div class="info mt-0 row mh-100">
@@ -21,22 +20,13 @@
                 </tr>
             </thead>
             <tbody>
-
                 @foreach ($users as $user)
-
-
                     <tr class="thien1">
                         <td class="text-center">{{ $user->id }}</td>
                         <td class="text-center">
                             {{ $user->name }}
                         </td>
                         <td class="text-center d-flex">
-
-
-
-
-
-
                             <a href=" {{ route('admin.users.edit', ['user' => $user->id]) }}"
                                 class="btn btn-info">Edit</a>
 
@@ -46,9 +36,6 @@
                                 <button type="submit" onclick="return  confirm('Are you sure?')"
                                     class="btn btn-danger">Delete</button>
                             </form>
-
-
-
                         </td>
                     </tr>
                 @endforeach
@@ -56,15 +43,4 @@
         </table>
         @include('sweetalert::alert')
     </div>
-
-    <!--Model add type-->
-
-
-    <!--Modal add product-->
-
-    <!-- Button trigger modal -->
-
-
-    <!-- Modal -->
-
 @endsection

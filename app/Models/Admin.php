@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Passport\HasApiTokens;
 
 class Admin extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +20,7 @@ class Admin extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',
@@ -86,9 +88,8 @@ class Admin extends Authenticatable implements MustVerifyEmail
 
     public function checkPermission($permission)
     {
-
-
-        $roles = Auth::guard('admin')->user()->roles;
+        
+        $roles = Auth::guard('admin-api')->user()->roles;
 
         foreach ($roles as $role) {
             $permissions = $role->permissions;
